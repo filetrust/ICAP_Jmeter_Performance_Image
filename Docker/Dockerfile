@@ -54,6 +54,8 @@ RUN chmod +x ${ICAP_SCRIPT}
 # Copy Test Data
 ADD testData ${INPUT_FOLDER}
 
+CMD $JMETER_HOME/bin/jmeter -n -t $TEST_SCRIPT_FILE -j $TEST_LOG_FILE
+
 #CMD echo "\n\n===== RETRIEVING FILE DATA =====\n\n" && \
 #    python3.7 $GET_FILE_DATA_PYTHON_SCRIPT -j $FILE_DATA_FILE -t $DYNAMODB_TEST_DATA_TABLE_NAME && \
 #    echo "\n\n===== RUNNING TESTS =====\n\n" && \
