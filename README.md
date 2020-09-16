@@ -16,7 +16,7 @@ The script ICAP.jmx will be executed by the Docker build.
 
 ## Validate Your Files
 
-1. Connect to the Docker Image ```docker run -it icap_jmeter_performance_image ```
+1. Connect to the Docker Image ```docker run -it icap_jmeter_perf_image ```
 2. Execute this command to see your rebuilt files ```ls ${OUTPUT_FOLDER} ```
 
 ## Troubleshooting
