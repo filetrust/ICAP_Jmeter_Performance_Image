@@ -3,11 +3,11 @@ FROM openjdk:8-jre
 
 # Install packages
 RUN apt-get update && \
-#    apt-get -y install python-pip && \
-#    pip install awscli && \
-#    apt-get -y install python3.7 && \
-#    apt-get -y install python3-pip && \
-#    pip3 install boto3 && \
+#    apt-get -y install python-pip  \
+#    pip install awscli     \
+#    apt-get -y install python3.7   \
+#    apt-get -y install python3-pip     \
+#    pip3 install boto3     \
 	apt-get -y install c-icap 
 	
 # Make Directories
@@ -16,8 +16,14 @@ RUN mkdir -p /home/ubuntu/icap/input/ && \
 
 # Set variables
 ENV JMETER_HOME=/usr/share/apache-jmeter \
-    JMETER_VERSION=3.3 \
+    JMETER_VERSION=5.2.1 \
     WEB_SOCKET_SAMPLER_VERSION=1.2 \
+    JMETER_PLUGINS_MANAGER_VERSION=1.4 \
+    CMDRUNNER_VERSION=2.2 \
+    JSON_LIB_VERSION=2.4 \
+    JSON_LIB_FULL_VERSION=${JSON_LIB_VERSION}-jdk15  \
+    NUMBER_OF_FILES_UNDER_LIB=166  \
+    NUMBER_OF_FILES_UNDER_LIB_EXT=81  \
 #    CONVERT_JSON_PYTHON_SCRIPT=/Test/xml_to_json.py \
 #    GET_FILE_DATA_PYTHON_SCRIPT=/Test/get_file_data.py \
 #    UPLOAD_RESULTS_SCRIPT=/Test/upload_results.py \
@@ -43,6 +49,18 @@ RUN wget http://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JMETER_V
     rm -f apache-jmeter-${JMETER_VERSION}.tgz && \
     mv apache-jmeter-${JMETER_VERSION} ${JMETER_HOME}
 
+# Install Plugin Manager
+RUN cd /tmp/ &&\
+    wget -O jmeter-plugins-manager-1.4.jar http://search.maven.org/remotecontent?filepath=kg/apc/jmeter-plugins-manager/1.4/jmeter-plugins-manager-1.4.jar && \
+    mv /tmp/jmeter-plugins-manager-1.4.jar ${JMETER_HOME}/lib/ext/jmeter-plugins-manager-1.4.jar && \
+    wget -O cmdrunner-2.2.jar http://search.maven.org/remotecontent?filepath=kg/apc/cmdrunner/2.2/cmdrunner-2.2.jar && \
+    mv /tmp/cmdrunner-2.2.jar ${JMETER_HOME}/lib/cmdrunner-2.2.jar &&\
+    wget -O json-lib-2.4-jdk15.jar https://sourceforge.net/projects/json-lib/files/json-lib/json-lib-2.4/json-lib-2.4-jdk15.jar/download && \
+    mv /tmp/json-lib-2.4-jdk15.jar ${JMETER_HOME}/lib/json-lib-2.4-jdk15.jar &&\
+    java -cp ${JMETER_HOME}/lib/ext/jmeter-plugins-manager-1.4.jar org.jmeterplugins.repository.PluginManagerCMDInstaller && \
+    chmod +x ${JMETER_HOME}/bin/PluginsManagerCMD.sh &&\
+    ${JMETER_HOME}/bin/PluginsManagerCMD.sh install bzm-parallel=0.9
+
 # Copy Test Script and File Data
 COPY ICAP.jmx ${TEST_SCRIPT_FILE}
 COPY script.sh ${ICAP_SCRIPT}
@@ -56,17 +74,17 @@ ADD testData ${INPUT_FOLDER}
 
 CMD $JMETER_HOME/bin/jmeter -n -t $TEST_SCRIPT_FILE -j $TEST_LOG_FILE
 
-#CMD echo "\n\n===== RETRIEVING FILE DATA =====\n\n" && \
-#    python3.7 $GET_FILE_DATA_PYTHON_SCRIPT -j $FILE_DATA_FILE -t $DYNAMODB_TEST_DATA_TABLE_NAME && \
-#    echo "\n\n===== RUNNING TESTS =====\n\n" && \
-#    $JMETER_HOME/bin/jmeter -n -t $TEST_SCRIPT_FILE -j $TEST_LOG_FILE && \
-#    echo "\n\n===== TEST LOGS =====\n\n" && \
-#    cat $TEST_LOG_FILE && \
-#    echo "\n\n===== TEST RESULTS =====\n\n" && \
-#    cat $TEST_RESULTS_PATH && \
-#    echo "\n\n===== CONVERTING XML =====\n\n" && \
-#    python3.7 $CONVERT_JSON_PYTHON_SCRIPT -i $TEST_RESULTS_PATH -o $TEST_RESULTS_JSON_PATH && \
-#    echo "\n\n===== UPLOADING RESULTS =====\n\n" && \
+#CMD echo "\n\n===== RETRIEVING FILE DATA =====\n\n"    \
+#    python3.7 $GET_FILE_DATA_PYTHON_SCRIPT -j $FILE_DATA_FILE -t $DYNAMODB_TEST_DATA_TABLE_NAME    \
+#    echo "\n\n===== RUNNING TESTS =====\n\n"   \
+#    $JMETER_HOME/bin/jmeter -n -t $TEST_SCRIPT_FILE -j $TEST_LOG_FILE  \
+#    echo "\n\n===== TEST LOGS =====\n\n"   \
+#    cat $TEST_LOG_FILE     \
+#    echo "\n\n===== TEST RESULTS =====\n\n"    \
+#    cat $TEST_RESULTS_PATH     \
+#    echo "\n\n===== CONVERTING XML =====\n\n"  \
+#    python3.7 $CONVERT_JSON_PYTHON_SCRIPT -i $TEST_RESULTS_PATH -o $TEST_RESULTS_JSON_PATH     \
+#    echo "\n\n===== UPLOADING RESULTS =====\n\n"   \
 #    python3.7 $UPLOAD_RESULTS_SCRIPT -j $TEST_RESULTS_JSON_PATH -t $DYNAMODB_RESULTS_TABLE_NAME    
 
 
