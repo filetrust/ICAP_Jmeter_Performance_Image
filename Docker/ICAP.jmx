@@ -74,7 +74,7 @@
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/home/ubuntu/icap/jmeter results/icap.csv</stringProp>
+          <stringProp name="filename">/Test/Results/ICAP.csv</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>
