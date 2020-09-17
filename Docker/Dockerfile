@@ -55,10 +55,10 @@ RUN wget http://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JMETER_V
 # Install Plugin Manager
 RUN cd /tmp/ &&\
     wget -O jmeter-plugins-manager-1.4.jar http://search.maven.org/remotecontent?filepath=kg/apc/jmeter-plugins-manager/1.4/jmeter-plugins-manager-1.4.jar && \
-    mv /tmp/jmeter-plugins-manager-1.4.jar ${JMETER_HOME}/lib/ext/jmeter-plugins-manager-1.4.jar && \
     wget -O cmdrunner-2.2.jar http://search.maven.org/remotecontent?filepath=kg/apc/cmdrunner/2.2/cmdrunner-2.2.jar && \
-    mv /tmp/cmdrunner-2.2.jar ${JMETER_HOME}/lib/cmdrunner-2.2.jar &&\
     wget -O json-lib-2.4-jdk15.jar https://sourceforge.net/projects/json-lib/files/json-lib/json-lib-2.4/json-lib-2.4-jdk15.jar/download && \
+    mv /tmp/jmeter-plugins-manager-1.4.jar ${JMETER_HOME}/lib/ext/jmeter-plugins-manager-1.4.jar && \
+    mv /tmp/cmdrunner-2.2.jar ${JMETER_HOME}/lib/cmdrunner-2.2.jar &&\
     mv /tmp/json-lib-2.4-jdk15.jar ${JMETER_HOME}/lib/json-lib-2.4-jdk15.jar &&\
     java -cp ${JMETER_HOME}/lib/ext/jmeter-plugins-manager-1.4.jar org.jmeterplugins.repository.PluginManagerCMDInstaller && \
     chmod +x ${JMETER_HOME}/bin/PluginsManagerCMD.sh &&\
