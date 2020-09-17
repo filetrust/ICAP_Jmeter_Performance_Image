@@ -12,7 +12,9 @@ RUN apt-get update && \
 	
 # Make Directories
 RUN mkdir -p /home/ubuntu/icap/input/ && \
-    mkdir -p /home/ubuntu/icap/output
+    mkdir -p /home/ubuntu/icap/output && \
+    mkdir -p /Test/Results/
+
 
 # Set variables
 ENV JMETER_HOME=/usr/share/apache-jmeter \
@@ -29,6 +31,7 @@ ENV JMETER_HOME=/usr/share/apache-jmeter \
 #    UPLOAD_RESULTS_SCRIPT=/Test/upload_results.py \
 #    DYNAMODB_RESULTS_TABLE_NAME=FileRebuildPerformanceTest-Results \
     TEST_SCRIPT_FILE=/Test/ICAP.jmx \
+    HTML_REPORT=/Test/HTML_REPORT \
 #    DYNAMODB_TEST_DATA_TABLE_NAME=RebuildApiPerformanceTests-FileData \
 #   FILE_DATA_FILE=/Test/FileData.json \
     TEST_LOG_FILE=/Test/test.log \
@@ -42,7 +45,7 @@ ENV JMETER_HOME=/usr/share/apache-jmeter \
 	ICAP_SCRIPT=/home/ubuntu/icap \
     INPUT_FOLDER=/home/ubuntu/icap/input/ \
     OUTPUT_FOLDER=/home/ubuntu/icap/output 
-
+    
 # Install Apache JMeter
 RUN wget http://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JMETER_VERSION}.tgz && \
     tar zxvf apache-jmeter-${JMETER_VERSION}.tgz && \
@@ -59,7 +62,8 @@ RUN cd /tmp/ &&\
     mv /tmp/json-lib-2.4-jdk15.jar ${JMETER_HOME}/lib/json-lib-2.4-jdk15.jar &&\
     java -cp ${JMETER_HOME}/lib/ext/jmeter-plugins-manager-1.4.jar org.jmeterplugins.repository.PluginManagerCMDInstaller && \
     chmod +x ${JMETER_HOME}/bin/PluginsManagerCMD.sh &&\
-    ${JMETER_HOME}/bin/PluginsManagerCMD.sh install bzm-parallel=0.9
+    ${JMETER_HOME}/bin/PluginsManagerCMD.sh install bzm-parallel=0.9 &&\
+    ${JMETER_HOME}/bin/PluginsManagerCMD.sh install jpgc-casutg=2.9
 
 # Copy Test Script and File Data
 COPY ICAP.jmx ${TEST_SCRIPT_FILE}
@@ -71,9 +75,9 @@ RUN chmod +x ${ICAP_SCRIPT}
 
 # Copy Test Data
 ADD testData ${INPUT_FOLDER}
-
-CMD $JMETER_HOME/bin/jmeter -n -t $TEST_SCRIPT_FILE -j $TEST_LOG_FILE
-
+    
+#CMD $JMETER_HOME/bin/jmeter -n -t $TEST_SCRIPT_FILE -j $TEST_LOG_FILE -l $TEST_RESULTS_PATH
+   
 #CMD echo "\n\n===== RETRIEVING FILE DATA =====\n\n"    \
 #    python3.7 $GET_FILE_DATA_PYTHON_SCRIPT -j $FILE_DATA_FILE -t $DYNAMODB_TEST_DATA_TABLE_NAME    \
 #    echo "\n\n===== RUNNING TESTS =====\n\n"   \
