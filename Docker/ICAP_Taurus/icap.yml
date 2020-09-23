@@ -1,0 +1,35 @@
+# provisioning: cloud
+modules:
+#   cloud:
+#     token: '06da11fe36a7d7b882b1c84f:28949bdd4025c7ad538c97a9e97e07d337bf33f1f7befa9fd2eeafc997338f3c325465c6'  # API id and API secret divided by :
+#     timeout: 10s  # BlazeMeter API client timeout
+#     browser-open: none  # auto-open browser on test start/end/both/none
+#     check-interval: 5s  # interval which Taurus uses to query test status from BlazeMeter
+#     public-report: false  # make test report public, disabled by default
+#     send-report-email: false  # send report email once test is finished, disabled by default
+#     request-logging-limit: 10240 # use this to dump more of request/response data into logs, for debugging
+  jmeter:
+    path: ~/usr/share/apache-jmeter
+    download-link: https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-{version}.zip
+    version: 5.2.1  # minimal supported version of JMeter is 2.9
+    force-ctg: true   # true by default
+    detect-plugins: true
+    plugins:
+    - bzm-parallel=0.9
+    - jpgc-casutg=2.9
+   
+execution:
+- concurrency: 2500
+  ramp-up: 100
+  hold-for: 1
+  scenario: with_script
+
+scenarios:
+  with_script:
+    script: ICAP.jmx
+    
+reporting:
+- module: passfail
+  criteria:
+  - "avg-rt>150ms for 10s, continue as failed"
+  - "fail>50% for 10s, stop as failed"

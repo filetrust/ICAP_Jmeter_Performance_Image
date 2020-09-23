@@ -5,11 +5,14 @@ FROM openjdk:8-jre
 RUN apt-get update && \
 #    apt-get -y install python-pip  \
 #    pip install awscli     \
-#    apt-get -y install python3.7   \
+    apt-get -y install python3.7  && \
+    apt-get -y install python3-pip &&\
 #    apt-get -y install python3-pip     \
 #    pip3 install boto3     \
 	apt-get -y install c-icap 
 	
+# Install Taurus
+RUN pip3 install bzt    
 # Make Directories
 RUN mkdir -p /home/ubuntu/icap/input/ && \
     mkdir -p /home/ubuntu/icap/output && \
