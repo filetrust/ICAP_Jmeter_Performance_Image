@@ -45,7 +45,7 @@ ENV JMETER_HOME=/root/usr/share/apache-jmeter \
 #    AWS_DEFAULT_REGION=eu-west-1 \
     PATH="~/.local/bin:$PATH" \
     JVM_ARGS="-Xms2048m -Xmx4096m -XX:NewSize=1024m -XX:MaxNewSize=2048m -Duser.timezone=UTC" \
-	ICAP_SCRIPT=/home/ubuntu/icap \
+    ICAP_SCRIPT=/home/ubuntu/icap \
     INPUT_FOLDER=/home/ubuntu/icap/input/ \
     OUTPUT_FOLDER=/home/ubuntu/icap/output 
     
