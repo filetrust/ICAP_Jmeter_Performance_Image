@@ -20,7 +20,7 @@ modules:
    
 execution:
 - concurrency: 2500
-  ramp-up: 100
+  ramp-up: 10
   hold-for: 1
   scenario: with_script
 
