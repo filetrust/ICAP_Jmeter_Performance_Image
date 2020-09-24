@@ -19,7 +19,7 @@ modules:
     - jpgc-casutg=2.9
    
 execution:
-- concurrency: 100
+- concurrency: 2500
   ramp-up: 10
   hold-for: 1
   scenario: with_script
