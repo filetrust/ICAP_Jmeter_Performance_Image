@@ -35,8 +35,8 @@
 ```yaml
 execution:
 - concurrency: 100
-  ramp-up: 10
-  hold-for: 1
+  ramp-up: 10m
+  hold-for: 1m
   scenario: with_script
 ```
 
