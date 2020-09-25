@@ -34,9 +34,9 @@
 **** You can update yml file for diffrent load patterns as required before building image****
 ```yaml
 execution:
-- concurrency: 100
-  ramp-up: 10
-  hold-for: 1
+- concurrency: 100 # Will try to run max thread 100
+  ramp-up: 10s # Will ramp-up thread every 10 sec
+  hold-for: 1m # The load will be hold for 1 min
   scenario: with_script
 ```
 
